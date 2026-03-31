@@ -1,0 +1,16 @@
+# Python caches
+__pycache__/
+*.py[cod]
+*venv/
+.env
+
+# Jupyter and VS Code
+.vscode/
+*.ipynb_checkpoints/
+
+# Hide the Translation Architecture (The Facade)
+src/mapping.py
+data/dungeon_sensorstats.csv
+
+# Keep Large Model Weights Local
+models/*.pkl
