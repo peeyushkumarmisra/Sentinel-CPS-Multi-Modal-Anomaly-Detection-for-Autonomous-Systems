@@ -1,0 +1,35 @@
+# AIR Project Dependencies
+# Base: Python 3.11 / CUDA 12.1
+
+# CRITICAL: Point pip to the PyTorch repository for CUDA-compiled wheels
+--extra-index-url https://download.pytorch.org/whl/cu121
+
+# Data & Computation
+numpy==1.26.4
+pandas==2.2.2
+scipy==1.13.0
+
+# Machine Learning
+scikit-learn==1.4.2
+umap-learn==0.5.6
+numba==0.59.1
+llvmlite==0.42.0
+
+# Deep Learning
+torch==2.2.1+cu121
+torchvision==0.17.1+cu121
+
+# Computer Vision
+opencv-python-headless==4.9.0.80
+scikit-image==0.22.0
+
+# Visualization
+matplotlib==3.8.4
+seaborn==0.13.2
+
+# Reinforcement Learning
+gymnasium==0.29.1
+pygame==2.5.2
+
+# Utilities
+tqdm==4.66.2
