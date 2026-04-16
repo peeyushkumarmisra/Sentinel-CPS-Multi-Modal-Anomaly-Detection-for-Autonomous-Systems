@@ -3,19 +3,18 @@
 import numpy as np
 import matplotlib.pyplot as pt
 
-
-def visulazie_training(rewards, time_taken, title, save_path): # To plot training rewards on line grapgh
+def visualize_training(rewards, time_taken, title, save_path): 
     window = 10
     if len(rewards) >= window:
-        moving_avg = np.convolve(rewards, np.ones(window)/window, mode = 'valid')
+        moving_avg = np.convolve(rewards, np.ones(window)/window, mode='valid')
     else:
         moving_avg = rewards
-    # Time at title
+        
     mins = int(time_taken // 60)
     secs = time_taken % 60
-    # Plotting
+    
     pt.figure(figsize=(10,8))
-    pt.plot(rewards, alpha =0.3, color='gray', label='Reward')
+    pt.plot(rewards, alpha=0.3, color='gray', label='Reward')
     pt.plot(range(window-1, len(rewards)), moving_avg, color='blue', linewidth=2, label=f'{window}-Ep Moving Avg')
     pt.title(f"{title}\nTotal Training Time: {mins}m {secs:.5f}s", fontsize=14, fontweight='bold')
     pt.xlabel("Episodes", fontsize=12)
@@ -26,8 +25,7 @@ def visulazie_training(rewards, time_taken, title, save_path): # To plot trainin
     pt.close()
     print("\nTraining graph saved")
 
-
-def visualize_comparison(q_history, s_history, q_time, s_time):
+def visulazie_comparison(q_history, s_history, q_time, s_time):
     window = 100
     q_avg = np.convolve(q_history, np.ones(window)/window, mode='valid')
     s_avg = np.convolve(s_history, np.ones(window)/window, mode='valid')
@@ -35,8 +33,8 @@ def visualize_comparison(q_history, s_history, q_time, s_time):
     fig, (ax1, ax2) = pt.subplots(1, 2, figsize=(16, 7))
 
     # Plot 1: Learning Convergence
-    ax1.plot(range(window-1, 10000), q_avg, label='Q-Learning', color='blue', linewidth=2)
-    ax1.plot(range(window-1, 10000), s_avg, label='SARSA', color='orange', linewidth=2)
+    ax1.plot(range(window-1, len(q_history)), q_avg, label='Q-Learning', color='blue', linewidth=2)
+    ax1.plot(range(window-1, len(q_history)), s_avg, label='SARSA', color='orange', linewidth=2)
     ax1.set_title("Learning Convergence (Moving Avg)", fontsize=14, fontweight='bold')
     ax1.set_xlabel("Episodes")
     ax1.set_ylabel("Total Reward")
@@ -54,6 +52,8 @@ def visualize_comparison(q_history, s_history, q_time, s_time):
     ax2.set_title("Total Training Time (10k Episodes)", fontsize=14, fontweight='bold')
     ax2.set_ylabel("Seconds")
     ax2.set_ylim(0, max(times) * 1.2)
+    
     pt.tight_layout()
-    pt.savefig("/AIR/comparison_results.png", dpi=300)
-    print("\nComparison graph saved to /AIR/comparison_results.png")
+    save_target = "/AIR/RL_training/comparison_results.jpeg"
+    pt.savefig(save_target, dpi=300)
+    print(f"\nComparison graph saved to {save_target}")

@@ -72,53 +72,18 @@ def map_clusters_to_truth(true_labels, pred_labels):
     mapping = {c: r for r, c in zip(row_ind, col_ind)}
     return np.array([mapping.get(label, label) for label in pred_labels])
 
-def generate_comparison_dashboard(metrics_dict, cm_gmm, cm_dec, class_names, save_path="graphs/model_comparison.png"):
-    """Generates a 2x2 dashboard comparing GMM and DEC performance."""
-    print("Generating 2x2 Performance Dashboard...")
+def evaluate_and_plot_usl(true_labels, gmm_preds, dec_preds, class_names, gmm_time, dec_time):
+    """
+    Calculates clustering metrics (ARI, NMI, Homogeneity) and Confusion Matrices 
+    for both GMM and DEC models, and generates a comprehensive 2x2 visual dashboard.
+    """
+    print("Evaluating models and generating 2x2 Performance Dashboard...")
+    
+    # Ensure directory exists
+    save_path="USL_training/model_comparison.jpeg"
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     
-    fig, axes = plt.subplots(2, 2, figsize=(14, 12))
-    sns.set_theme(style="whitegrid")
-    
-    # Top Left: Performance Metrics
-    ax1 = axes[0, 0]
-    x = np.arange(3)
-    width = 0.35
-    ax1.bar(x - width/2, [metrics_dict['GMM']['ARI'], metrics_dict['GMM']['NMI'], metrics_dict['GMM']['Homo']], width, label='GMM', color='#2ca02c')
-    ax1.bar(x + width/2, [metrics_dict['DEC']['ARI'], metrics_dict['DEC']['NMI'], metrics_dict['DEC']['Homo']], width, label='DEC', color='#1f77b4')
-    ax1.set_ylabel('Score')
-    ax1.set_title('Performance Metrics Comparison')
-    ax1.set_xticks(x)
-    ax1.set_xticklabels(['ARI', 'NMI', 'Homogeneity'])
-    ax1.set_ylim(0, 1.1)
-    ax1.legend()
-    for rect in ax1.patches:
-        ax1.annotate(f'{rect.get_height():.4f}', (rect.get_x() + rect.get_width() / 2, rect.get_height()), ha='center', va='bottom', fontweight='bold', fontsize=9)
-
-    # Top Right: Training Time
-    ax2 = axes[0, 1]
-    rects = ax2.bar(['GMM', 'DEC'], [metrics_dict['GMM']['Time'], metrics_dict['DEC']['Time']], width=0.4, color=['#2ca02c', '#1f77b4'])
-    ax2.set_ylabel('Time (Seconds)')
-    ax2.set_title('Training Time Comparison')
-    for rect in rects:
-        ax2.annotate(f'{rect.get_height():.4f} s', (rect.get_x() + rect.get_width() / 2, rect.get_height()), ha='center', va='bottom', fontweight='bold', fontsize=10)
-
-    # Bottom Row: Confusion Matrices
-    sns.heatmap(cm_gmm, annot=True, fmt='d', cmap='Greens', ax=axes[1, 0], xticklabels=class_names, yticklabels=class_names, cbar=True)
-    axes[1, 0].set_title('GMM Confusion Matrix')
-    
-    sns.heatmap(cm_dec, annot=True, fmt='d', cmap='Blues', ax=axes[1, 1], xticklabels=class_names, yticklabels=class_names, cbar=True)
-    axes[1, 1].set_title('DEC Confusion Matrix')
-
-    plt.tight_layout()
-    plt.savefig(save_path, dpi=300)
-    plt.close()
-
-def evaluate_and_plot_usl(true_labels, gmm_preds, dec_preds, class_names, gmm_time, dec_time, save_path="graphs/model_comparison.png"):
-    """
-    Calculates ARI, NMI, Homogeneity, and Confusion Matrices for both models,
-    then automatically triggers the 2x2 dashboard generation.
-    """
+    # 1. Calculate all metrics and store them logically
     metrics = {'GMM': {}, 'DEC': {}}
     
     for name, preds, t in [('GMM', gmm_preds, gmm_time), ('DEC', dec_preds, dec_time)]:
@@ -126,9 +91,56 @@ def evaluate_and_plot_usl(true_labels, gmm_preds, dec_preds, class_names, gmm_ti
         metrics[name]['NMI'] = normalized_mutual_info_score(true_labels, preds)
         metrics[name]['Homo'] = homogeneity_score(true_labels, preds)
         metrics[name]['Time'] = t
+        metrics[name]['CM'] = confusion_matrix(true_labels, preds)
 
-    cm_gmm = confusion_matrix(true_labels, gmm_preds)
-    cm_dec = confusion_matrix(true_labels, dec_preds)
+    # 2. Setup the 2x2 Grid
+    fig, axes = plt.subplots(2, 2, figsize=(14, 12))
+    sns.set_theme(style="whitegrid")
+    
+    # --- Top Left: Performance Metrics Bar Chart ---
+    ax1 = axes[0, 0]
+    x = np.arange(3)
+    width = 0.35
+    
+    gmm_scores = [metrics['GMM']['ARI'], metrics['GMM']['NMI'], metrics['GMM']['Homo']]
+    dec_scores = [metrics['DEC']['ARI'], metrics['DEC']['NMI'], metrics['DEC']['Homo']]
+    
+    ax1.bar(x - width/2, gmm_scores, width, label='GMM', color='#2ca02c')
+    ax1.bar(x + width/2, dec_scores, width, label='DEC', color='#1f77b4')
+    ax1.set_ylabel('Score')
+    ax1.set_title('Performance Metrics Comparison')
+    ax1.set_xticks(x)
+    ax1.set_xticklabels(['ARI', 'NMI', 'Homogeneity'])
+    ax1.set_ylim(0, 1.1)
+    ax1.legend()
+    
+    # Add data labels
+    for rect in ax1.patches:
+        ax1.annotate(f'{rect.get_height():.4f}', 
+                     (rect.get_x() + rect.get_width() / 2, rect.get_height()), 
+                     ha='center', va='bottom', fontweight='bold', fontsize=9)
 
-    # Assumes generate_comparison_dashboard is already in usl_utils.py
-    generate_comparison_dashboard(metrics, cm_gmm, cm_dec, class_names, save_path)
+    # --- Top Right: Training Time Comparison ---
+    ax2 = axes[0, 1]
+    rects = ax2.bar(['GMM', 'DEC'], [metrics['GMM']['Time'], metrics['DEC']['Time']], width=0.4, color=['#2ca02c', '#1f77b4'])
+    ax2.set_ylabel('Time (Seconds)')
+    ax2.set_title('Training Time Comparison')
+    
+    # Add data labels
+    for rect in rects:
+        ax2.annotate(f'{rect.get_height():.4f} s', 
+                     (rect.get_x() + rect.get_width() / 2, rect.get_height()), 
+                     ha='center', va='bottom', fontweight='bold', fontsize=10)
+
+    # --- Bottom Row: Confusion Matrices ---
+    sns.heatmap(metrics['GMM']['CM'], annot=True, fmt='d', cmap='Greens', ax=axes[1, 0], xticklabels=class_names, yticklabels=class_names, cbar=True)
+    axes[1, 0].set_title('GMM Confusion Matrix')
+    
+    sns.heatmap(metrics['DEC']['CM'], annot=True, fmt='d', cmap='Blues', ax=axes[1, 1], xticklabels=class_names, yticklabels=class_names, cbar=True)
+    axes[1, 1].set_title('DEC Confusion Matrix')
+
+    # Save and Cleanup
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=300)
+    plt.close()
+    print(f"Dashboard generated and saved to: {save_path}")

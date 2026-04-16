@@ -161,7 +161,7 @@ class DECTrainer:
 
         return history
 
-    def save(self, save_path="models/dec_model.pt"):
+    def save(self, save_path="USL_training/dec_model.pt"):
         """Saves the PyTorch weights."""
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
         torch.save(self.model.state_dict(), save_path)
@@ -171,9 +171,9 @@ class DECTrainer:
 # 3. EXECUTION LOGIC
 # ==========================================
 if __name__ == "__main__":
-    FEATURES_PATH = "models/training_features.npy"
-    MODEL_SAVE_PATH = "models/dec_model.pt"
-    PLOT_SAVE_PATH = "graphs/dec_loss_curve.png"
+    FEATURES_PATH = "USL_training/training_features.npy"
+    MODEL_SAVE_PATH = "USL_training/dec_model.pt"
+    PLOT_SAVE_PATH = "USL_training/dec_loss_curve.png"
     TARGET_CLUSTERS = 5
 
     print("\n=== STARTING DEC TRAINING ===")

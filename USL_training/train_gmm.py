@@ -36,7 +36,7 @@ class GMMTrainer:
             n_init=10 # Run 10 times with different initializations to find the best fit
         )
 
-    def train(self, features_path="models/training_features.npy"):
+    def train(self, features_path="USL_training/training_features.npy"):
         """Loads the pre-processed numpy array and fits the GMM."""
         print(f"Loading extracted features from: {features_path}")
         if not os.path.exists(features_path):
@@ -56,7 +56,7 @@ class GMMTrainer:
             
         return self.model
 
-    def save(self, save_path="models/gmm_model.pkl"):
+    def save(self, save_path="USL_training/gmm_model.pkl"):
         """Saves the fitted GMM artifact for the inference pipeline."""
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
         joblib.dump(self.model, save_path)
@@ -70,6 +70,6 @@ if __name__ == "__main__":
     trainer = GMMTrainer(n_components=TARGET_CLUSTERS)
     
     print("\n=== STARTING GMM TRAINING ===")
-    trainer.train(features_path="models/training_features.npy")
-    trainer.save(save_path="models/gmm_model.pkl")
+    trainer.train(features_path="USL_training/training_features.npy")
+    trainer.save(save_path="USL_training/gmm_model.pkl")
     print("=== GMM TRAINING COMPLETE ===\n")

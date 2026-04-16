@@ -217,8 +217,8 @@ class CAETrainer:
 if __name__ == "__main__":
     # Configuration
     DATA_DIR = "data/fantasy_dataset"
-    MODEL_PATH = "models/cae_feature_ex.pt"
-    PLOT_PATH = "graphs/cae_loss_curve.png"
+    MODEL_PATH = "USL_training/cae_feature_ex.pt"
+    PLOT_PATH = "USL_training/cae_loss_curve.jpeg"
 
     # Scan for images using the utility function
     paths_dict = scan_images(DATA_DIR)

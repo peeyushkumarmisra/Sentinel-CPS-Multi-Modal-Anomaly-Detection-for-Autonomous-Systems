@@ -45,14 +45,11 @@ class FeaturePipeline:
     can process new, unseen data using the exact same mathematical boundaries.
     """
 
-    def __init__(self, base_dir, cae_model_path="cae_feature_ex.pt",
-                 n_components=15, img_size=80, artifact_save_path="models/pca_bundle.pkl"):
+    def __init__(self, base_dir, n_components=15, img_size=80):
         
         self.base_dir       = base_dir
-        self.cae_model_path = cae_model_path
         self.n_components   = n_components
         self.img_size       = img_size
-        self.artifact_path  = artifact_save_path
         
         # Auto-detect GPU for faster deep learning extraction
         self.device         = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -97,7 +94,8 @@ class FeaturePipeline:
         
         # 3. Load the model strictly for evaluation (no gradient tracking)
         model = CAEmodel(latent_dim=128).to(self.device)
-        model.load_state_dict(torch.load(self.cae_model_path, map_location=self.device, weights_only=True))
+        cae_model_path="USL_training/cae_feature_ex.pt"
+        model.load_state_dict(torch.load(cae_model_path, map_location=self.device, weights_only=True))
         model.eval()
         
         latents = []
@@ -156,13 +154,15 @@ class FeaturePipeline:
         
         # Step 5: Final standardization over the combined matrix to ensure downstream ML models behave well
         fused = self.pipeline_state['final_scaler'].fit_transform(fused)
-        np.save(self.features_save_path, fused)
-        print(f"  [Artifact Saved]: {self.features_save_path}")
+        features_save_path = "USL_training/training_features.npy"
+        np.save(features_save_path, fused)
+        print(f"  [Artifact Saved]: {features_save_path}")
 
         # Step 6: Save the mathematical parameters (Scalers/PCA) for the inference scripts
-        os.makedirs(os.path.dirname(self.artifact_path), exist_ok=True)
-        joblib.dump(self.pipeline_state, self.artifact_path)
-        print(f"  [Artifact Saved]: {self.artifact_path} (CRITICAL FOR INFERENCE)")
+        artifact_path="USL_training/pca_bundle.pkl"
+        os.makedirs(os.path.dirname(artifact_path), exist_ok=True)
+        joblib.dump(self.pipeline_state, artifact_path)
+        print(f"  [Artifact Saved]: {artifact_path} (CRITICAL FOR INFERENCE)")
 
         # Step 7: Attach to the dataframe for easy tracking/saving
         df["fused_features"] = list(fused)

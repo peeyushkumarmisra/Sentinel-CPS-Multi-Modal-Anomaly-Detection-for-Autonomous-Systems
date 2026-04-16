@@ -9,7 +9,13 @@ __pycache__/
 
 # Hide the Translation Architecture (The Facade)
 mapping.py
-data/dungeon_sensorstats.csv
 
-# Keep Large Model Weights Local
+# Data
+data/
+
+# Model Weights
 models/*.pkl
+*.pt
+
+# Plots and Outputs
+*.png
