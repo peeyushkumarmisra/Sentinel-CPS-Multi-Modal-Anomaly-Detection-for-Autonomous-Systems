@@ -19,3 +19,4 @@ models/*.pkl
 
 # Plots and Outputs
 *.png
+*.csv

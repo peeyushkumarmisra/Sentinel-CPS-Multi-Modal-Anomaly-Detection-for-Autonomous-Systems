@@ -5,16 +5,16 @@ the training pipelines for Supervised Learning (SL), Unsupervised Learning (USL)
 and Reinforcement Learning (RL) sequentially.
 """
 
-#from SL_training.train_sl_models import SLTraining
+from SL_training.train_sl_models import SLTraining
 from USL_training.train_usl_models import USLTraining
-#from RL_training.train_rl_models import RLTraining
+from RL_training.train_rl_models import RLTraining
 
 
 if __name__ == "__main__":
     # SUPERVISED LEARNING PIPELINE
     print("SUPERVISED LEARNING MODELS TRAINING......")
-    #sl_trainer = SLTraining(data_path='data/SensorStats.csv', seed=47)
-    #sl_trainer.train_sl_models()
+    sl_trainer = SLTraining(data_path='data/SensorStats.csv', seed=47)
+    sl_trainer.train_sl_models()
     print("SUPERVISED LEARNING MODELS TRAINING COMPLETE\n")
 
     # UNSUPERVISED LEARNING PIPELINE
@@ -25,6 +25,6 @@ if __name__ == "__main__":
 
     # REINFORCEMENT LEARNING PIPELINE
     print("REINFORCEMENT LEARNING MODELS TRAINING......")
-    #rl_trainer = RLTraining(seed=47, episodes=10000)
-    #rl_trainer.train_rl_models()
+    rl_trainer = RLTraining(seed=47, episodes=10000)
+    rl_trainer.train_rl_models()
     print("REINFORCEMENT LEARNING MODELS TRAINING COMPLETE")

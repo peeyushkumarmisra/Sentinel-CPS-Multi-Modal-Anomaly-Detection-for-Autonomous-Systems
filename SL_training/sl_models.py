@@ -21,13 +21,13 @@ class DataProcessor:
     def categorization(self, df):
         # Optimized vectorized conditions instead of iterrows loop
         conditions = [
-            (df["Asset Class"] == "robot_arm") & (df["Remote Override Flag"] == 1),
-            (df["Asset Class"] == "robot_arm") & (df["Remote Override Flag"] != 1),
-            (df["Asset Class"] == "agv_units") & (df["Airborne Status"] == 1),
-            (df["Asset Class"] == "agv_units") & (df["Airborne Status"] != 1),
-            (df["Asset Class"] == "cnc_machine"),
-            (df["Asset Class"] == "plc_controller"),
-            (df["Asset Class"] == "drone")
+            (df["Asset Class"] == "Robotic Arm") & (df["Remote Override Flag"] == 1),
+            (df["Asset Class"] == "Robotic Arm") & (df["Remote Override Flag"] != 1),
+            (df["Asset Class"] == "AGV Unit") & (df["Airborne Status"] == 1),
+            (df["Asset Class"] == "AGV Unit") & (df["Airborne Status"] != 1),
+            (df["Asset Class"] == "CNC Machine"),
+            (df["Asset Class"] == "PLC Controller"),
+            (df["Asset Class"] == "Drone")
         ]
         choices = [
             "Robotic Arm (Override)",
