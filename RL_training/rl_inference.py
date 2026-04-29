@@ -11,10 +11,8 @@ from matplotlib.colors import ListedColormap
 from pathlib import Path
 
 
-# ---------------------------
-# Animation — standalone (must stay module-level to avoid GC during save)
-# ---------------------------
-def animate_agent(env_map, path):
+
+def animate_agent(env_map, path, gif_path):
     cmap = ListedColormap(['#808080', '#FFD700', "#FF9100", '#FF0000', '#00FF00'])
     fig, ax = plt.subplots(figsize=(6, 6))
 
@@ -43,23 +41,23 @@ def animate_agent(env_map, path):
         ims.append([circle, title])
 
     ani = animation.ArtistAnimation(fig, ims, interval=500, blit=True)
-    ani.save("rl_agent_navigation.gif", writer='pillow')
+    ani.save(gif_path, writer='pillow')
     plt.close()
 
 
 class RLInference:
     MOVES = {0: (-1, 0), 1: (1, 0), 2: (0, -1), 3: (0, 1)}
 
-    def __init__(self, model_dir: str = "MODELS"):
-        model_dir = Path(model_dir)
-        raw       = json.loads((model_dir / "q_brain.json").read_text())
-        self.qtable = self._parse_qtable(raw)
-        print(f"Q-table loaded from: {model_dir / 'q_brain.json'}  ({len(self.qtable)} states)")
+    def __init__(self, model_dir, qtable_file):
+        model_dir     = Path(model_dir)
+        raw           = json.loads((model_dir / qtable_file).read_text())
+        self.qtable   = self.parse_qtable(raw)
+        print(f"Q-table loaded: {qtable_file} ({len(self.qtable)} states)")
 
     @staticmethod
-    def _parse_qtable(raw: dict) -> dict:
+    def parse_qtable(raw_dict):
         parsed = {}
-        for k, v in raw.items():
+        for k, v in raw_dict.items():
             try:
                 state = tuple(map(int, k.strip("()").split(',')))
                 parsed[state] = v
@@ -67,9 +65,8 @@ class RLInference:
                 continue
         return parsed
 
-    def run(self, env_map, animate: bool = True) -> tuple:
+    def run(self, env_map, animate, gif_path):
         t0 = time.perf_counter()
-
         current_node = env_map.entry_node
         visited      = 0
         steps        = 0
@@ -81,22 +78,17 @@ class RLInference:
             state    = (current_node[0], current_node[1], visited)
             q_values = self.qtable.get(state)
             action   = int(np.argmax(q_values)) if q_values is not None else np.random.randint(0, 4)
-
             dy, dx = self.MOVES[action]
             nr, nc = current_node[0] + dy, current_node[1] + dx
-
             if nr < 0 or nr >= 10 or nc < 0 or nc >= 10 or env_map.grid[nr, nc] == 0:
                 rewards -= 5
                 continue
-
             current_node = (nr, nc)
-
             if current_node in env_map.spawners:
                 idx = env_map.spawners.index(current_node)
                 if not (visited & (1 << idx)):
                     visited |= (1 << idx)
                     rewards += 50
-
             if current_node == env_map.exit_node:
                 if visited == (1 << len(env_map.spawners)) - 1:
                     rewards += 500
@@ -105,12 +97,9 @@ class RLInference:
                     rewards += max(0, 100 - (missed * 10))
             else:
                 rewards -= 1
-
             path.append((current_node, visited))
-
         if animate:
-            animate_agent(env_map, path)  # ← module-level function, no GC risk
-
+            animate_agent(env_map, path, gif_path)  # ← module-level function, no GC risk
         elapsed = time.perf_counter() - t0
         print(f"[RL] {steps} steps | reward: {rewards} | elapsed: {elapsed:.4f}s")
         return [p[0] for p in path], rewards, elapsed
