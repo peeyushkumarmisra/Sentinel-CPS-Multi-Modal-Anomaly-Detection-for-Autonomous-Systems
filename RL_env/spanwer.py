@@ -9,8 +9,8 @@ import pandas as pd
 class DataSpawner:
     def __init__(self, csv_path, image_dir):
         self.image_dir = image_dir
-        self.classes = ['robotic_arm', 'plc_ontroller', 'agv_unit', 'drone', 'cnc_machine']
-
+        self.classes = ['robotic_arm', 'plc_controller', 'agv_unit', 'drone', 'cnc_machine']
+        
         try:
             self.df = pd.read_csv(csv_path)
         except FileNotFoundError:
@@ -20,7 +20,7 @@ class DataSpawner:
         # Generating random class for the 10 nodes
         self.node = self.generate_node()
         print("\n[MAP GENERATED] Asset Assignments for this Patrol:")
-        for idx, asset in enumerate(self.node_assignments):
+        for idx, asset in enumerate(self.node):
             print(f"  Node [{idx:02d}]: {asset}")
 
     def generate_node(self): # Ensures 1 of each class, then 5 random
@@ -36,8 +36,13 @@ class DataSpawner:
         target_class = self.node[node_idx]
 
         # Extracting rows from csv
-        class_df = self.df[self.df['Asset Class'] == target_class]
-        sampled_rows = class_df.sample(n=100) # Get 100 random unique rows
+        class_df = self.df[self.df['asset_class'] == target_class]
+        grouped = class_df.groupby(['airborne_status', 'remote_override_flag'])
+        valid_groups = [name for name, group in grouped if len(group) >= 100]
+        chosen_flags = random.choice(valid_groups) # This is (air, override)
+        current_air = chosen_flags[0]
+        current_override = chosen_flags[1]
+        sampled_rows = grouped.get_group(chosen_flags).sample(n=100)
 
         # Extracting images from base_dir
         class_img_dir = os.path.join(self.image_dir, target_class)
@@ -50,4 +55,4 @@ class DataSpawner:
         else:
             print(f"Image directory not found for {target_class} at {class_img_dir}")
 
-        return target_class, sampled_rows, image_paths
+        return target_class, sampled_rows, image_paths, current_air, current_override

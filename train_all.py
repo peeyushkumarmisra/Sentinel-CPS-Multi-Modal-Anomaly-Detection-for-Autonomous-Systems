@@ -33,8 +33,8 @@ if __name__ == "__main__":
 
     # UNSUPERVISED LEARNING PIPELINE
     print("UNSUPERVISED LEARNING MODELS TRAINING......")
-    #usl_trainer = USLTraining(seed=SEED, data_dir=IMG_PATH, plot_dir = PLOT_PATH, model_dir = MODEL_PATH)
-    #usl_trainer.train_usl_models()
+    usl_trainer = USLTraining(seed=SEED, data_dir=IMG_PATH, plot_dir = PLOT_PATH, model_dir = MODEL_PATH)
+    usl_trainer.train_usl_models()
     print("UNSUPERVISED LEARNING MODELS TRAINING COMPLETE\n")
 
     # REINFORCEMENT LEARNING PIPELINE

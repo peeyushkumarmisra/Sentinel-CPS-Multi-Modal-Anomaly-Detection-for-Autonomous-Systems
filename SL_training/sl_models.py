@@ -32,11 +32,11 @@ class DataProcessor:
         choices = [
             "robotic_arm_override",
             "robotic_arm_non_override",
-            "avg_unit_fly",
-            "avg_unit_non_fly",
+            "agv_unit_fly",
+            "agv_unit_non_fly",
             "cnc_machine",
             "plc_controller",
-            "drone"
+            "drone_fly"
         ]
         df["new_class"] = np.select(conditions, choices, default="Unknown")
         return df
@@ -51,6 +51,7 @@ class DataProcessor:
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=self.seed, stratify=y)
         x_train_scaled = self.scaler.fit_transform(x_train)
         x_test_scaled = self.scaler.transform(x_test)
+        joblib.dump(self.scaler, "MODELS/sl_scaler.pkl")
         return x_train_scaled, x_test_scaled, y_train, y_test
 
 

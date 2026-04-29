@@ -31,13 +31,25 @@ class DECmodel(nn.Module):
 
 # TRAINING
 class DECTrainer:  # Warm-up -> Self-Supervised Refinement for Deep Embedding Clustering
-    def __init__(self, input_dim, n_clusters, epochs, seed):
-        self.n_clusters = n_clusters
-        self.epochs = epochs
+    def __init__(self, input_dim=None, n_clusters=None, epochs=None, seed=None, model_path=None, is_train=True):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.model = DECmodel(input_dim=input_dim, n_clusters=n_clusters).to(self.device)
-        self.seed = seed
-        ReproducibilityManager.reproducible(self.seed)
+        self.is_train = is_train
+        if self.is_train: # For Training
+            self.n_clusters = n_clusters
+            self.epochs = epochs
+            self.seed = seed
+            self.model = DECmodel(input_dim=input_dim, n_clusters=self.n_clusters).to(self.device)
+            ReproducibilityManager.reproducible(self.seed)
+        else: # For Inference
+            self.seed   = None
+            self.epochs = None
+            state_dict = torch.load(model_path, map_location=self.device, weights_only=True)
+            extracted_input_dim = state_dict['encoder.0.weight'].shape[1]
+            self.n_clusters = state_dict['encoder.4.weight'].shape[0]
+            self.model = DECmodel(input_dim=extracted_input_dim, n_clusters=self.n_clusters).to(self.device)
+            self.model.load_state_dict(state_dict)
+            self.model.eval()
+            print(f"DEC loaded from: {model_path}  (input_dim={extracted_input_dim}, n_clusters={self.n_clusters})")
         
     def get_target_distribution(self, q): # Calculates the auxiliary target distribution (p) for the KL-Divergence loss.
         weight = q**2 / (q.sum(0) + 1e-10) 

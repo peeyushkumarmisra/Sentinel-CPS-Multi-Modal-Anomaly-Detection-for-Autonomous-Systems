@@ -7,21 +7,30 @@ import numpy as np
 from sklearn.mixture import GaussianMixture
 
 class GMMTrainer:
-    def __init__(self, n_clusters, covariance_type, seed):
-        self.n_clusters = n_clusters
-        self.covariance_type = covariance_type
-        self.seed = seed
-        self.model = GaussianMixture(
-            n_components=self.n_clusters, 
-            covariance_type=self.covariance_type, 
-            random_state=self.seed, 
-            n_init=10 # Run 10 times with different initializations to find the best fit
-        )
+    def __init__(self, n_clusters=None, covariance_type=None, seed=None, model_path=None, is_train=True):
+        self.is_train = is_train
+        if self.is_train: # For training
+            self.n_clusters = n_clusters
+            self.covariance_type = covariance_type
+            self.seed = seed
+            self.model = GaussianMixture(
+                n_components=self.n_clusters, 
+                covariance_type=self.covariance_type, 
+                random_state=self.seed, 
+                n_init=10 # Run 10 times with different initializations to find the best fit
+            )
+        else: # For inferance
+            self.model = joblib.load(model_path)
+            self.n_clusters = self.model.n_components
+            self.covariance_type = self.model.covariance_type
+            self.seed = self.model.random_state
+            print(f"GMM loaded from: {model_path}  ({self.n_clusters} clusters)")
 
     def train(self, x_train):
         print(f"Features loaded successfully. Shape: {x_train.shape}")
         print(f"Fitting GMM with {self.n_clusters} components...")
         self.model.fit(x_train) # Training
+        
         # Checking convergence
         if self.model.converged_:
             print(f"GMM converged in {self.model.n_iter_} iterations.")

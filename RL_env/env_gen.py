@@ -75,7 +75,7 @@ class MapGenerator:
         cmap = ListedColormap(['#808080', '#FFD700', "#FF9100", '#FF0000','#00FF00'])
         plt.figure(figsize=(6, 6))
         plt.pcolor(vis_grid[::-1], cmap=cmap, edgecolors='black', linewidths=2)
-        plt.title("OT Security Patrol Route (40 Active Blocks)")
+        plt.title("Security Patrol Route")
         # Blocks (Grid)
         plt.xticks(np.arange(0.5, 10.5, 1), range(10))
         plt.yticks(np.arange(0.5, 10.5, 1), reversed(range(10)))
