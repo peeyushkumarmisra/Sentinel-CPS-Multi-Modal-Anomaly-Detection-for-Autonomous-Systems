@@ -9,10 +9,8 @@ def visualize_training(rewards, time_taken, title, save_path):
         moving_avg = np.convolve(rewards, np.ones(window)/window, mode='valid')
     else:
         moving_avg = rewards
-        
     mins = int(time_taken // 60)
     secs = time_taken % 60
-    
     pt.figure(figsize=(10,8))
     pt.plot(rewards, alpha=0.3, color='gray', label='Reward')
     pt.plot(range(window-1, len(rewards)), moving_avg, color='blue', linewidth=2, label=f'{window}-Ep Moving Avg')
@@ -21,17 +19,16 @@ def visualize_training(rewards, time_taken, title, save_path):
     pt.ylabel("Total Reward", fontsize=12)
     pt.legend()
     pt.grid(True, linestyle='--', alpha=0.6)
-    pt.savefig(save_path, dpi=300, bbox_inches='tight')
+    pt.savefig(save_path, dpi=300)
     pt.close()
     print("\nTraining graph saved")
 
-def visulazie_comparison(q_history, s_history, q_time, s_time):
+def visulazie_comparison(q_history, s_history, q_time, s_time, plot_path):
     window = 100
     q_avg = np.convolve(q_history, np.ones(window)/window, mode='valid')
     s_avg = np.convolve(s_history, np.ones(window)/window, mode='valid')
     
     fig, (ax1, ax2) = pt.subplots(1, 2, figsize=(16, 7))
-
     # Plot 1: Learning Convergence
     ax1.plot(range(window-1, len(q_history)), q_avg, label='Q-Learning', color='blue', linewidth=2)
     ax1.plot(range(window-1, len(q_history)), s_avg, label='SARSA', color='orange', linewidth=2)
@@ -54,6 +51,5 @@ def visulazie_comparison(q_history, s_history, q_time, s_time):
     ax2.set_ylim(0, max(times) * 1.2)
     
     pt.tight_layout()
-    save_target = "/AIR/RL_training/comparison_results.jpeg"
-    pt.savefig(save_target, dpi=300)
-    print(f"\nComparison graph saved to {save_target}")
+    pt.savefig(plot_path, dpi=300)
+    print(f"\nComparison graph saved to {plot_path}")

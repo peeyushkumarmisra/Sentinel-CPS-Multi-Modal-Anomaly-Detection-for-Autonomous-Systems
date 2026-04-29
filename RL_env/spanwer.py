@@ -1,22 +1,6 @@
 """
 File: spanwer.py
-This script manages the dynamic data generation for the simulation, responsible for pairing 
-physical assets with their corresponding sensor data and images at each spawner node.
-
-1. DataSpawner:
-    * init: Initializes the spawner with the paths to the tabular CSV data and the image 
-            repository. It defines five primary asset classes: Robotic Arm, PLC Controller,
-            AGV Unit, Drone, and CNC Machine.
-    * generate_node:    Creates a randomized list of 10 asset assignments for the map nodes. It
-                        guarantees that each of the five classes appears at least once, filling
-                        the remaining slots with random selections.
-    * get_payload: Retrieves a specific dataset for a given node index.
-        * Identifies the target class assigned to that node.
-        * Samples 100 unique rows of tabular sensor data from the CSV.
-        * Randomly selects 100 corresponding .png image paths from the class-specific image directory.
-        * Returns the class name, the sampled data rows, and the list of image paths.
 """
-
 
 import os
 import random
@@ -25,7 +9,7 @@ import pandas as pd
 class DataSpawner:
     def __init__(self, csv_path, image_dir):
         self.image_dir = image_dir
-        self.classes = ['Robotic Arm', 'PLC Controller', 'AGV Unit', 'Drone', 'CNC Machine']
+        self.classes = ['robotic_arm', 'plc_ontroller', 'agv_unit', 'drone', 'cnc_machine']
 
         try:
             self.df = pd.read_csv(csv_path)

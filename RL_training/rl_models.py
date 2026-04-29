@@ -1,17 +1,19 @@
 # rl_models.py
 
+import os
 import json
 import random
 import collections
 import numpy as np
 
 class RLModels:
-    def __init__(self, action_space, alpha=0.1, gamma=0.95, ep=1.0, ep_decay=0.999):
+    def __init__(self, action_space, model_dir, alpha=0.1, gamma=0.95, ep=1.0, ep_decay=0.999):
         self.action_space = action_space
         self.alpha     = alpha 
         self.gamma     = gamma 
         self.ep        = ep 
         self.ep_decay  = ep_decay
+        self.model_dir = model_dir
         self.min_ep    = 0.01
         self.qtable    = collections.defaultdict(lambda: [0.0, 0.0, 0.0, 0.0]) 
 
@@ -24,11 +26,15 @@ class RLModels:
     def decay_ep(self): 
         self.ep = max(self.min_ep, self.ep * self.ep_decay)
 
-    def save_model(self, filename): 
+    def save_model(self, name): 
         serializable_qtable = {str(k): v for k, v in self.qtable.items()}
-        with open(filename, 'w') as f:
+        if name is "q":
+            model_path = os.path.join(self.model_dir, "q_brain.json")
+        else:
+            model_path = os.path.join(self.model_dir, "sarsa_brain.json")
+        with open(model_path, 'w') as f:
             json.dump(serializable_qtable, f)
-        print(f"Model saved to {filename}")
+        print(f"Model saved to {model_path}")
 
 class QLearning(RLModels):
     def learn(self, state, action, reward, next_state, complete):
