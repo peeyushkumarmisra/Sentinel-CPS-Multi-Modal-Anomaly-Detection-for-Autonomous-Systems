@@ -12,39 +12,6 @@ from pathlib import Path
 
 
 
-def animate_agent(env_map, path, gif_path):
-    cmap = ListedColormap(['#808080', '#FFD700', "#FF9100", '#FF0000', '#00FF00'])
-    fig, ax = plt.subplots(figsize=(6, 6))
-
-    vis_grid = np.copy(env_map.grid)
-    for r, c in env_map.spawners:
-        vis_grid[r, c] = 2
-    vis_grid[env_map.entry_node] = 3
-    vis_grid[env_map.exit_node]  = 4
-
-    ax.pcolor(vis_grid[::-1], cmap=cmap, edgecolors='black', linewidths=2)
-    ax.set_xticks(np.arange(0.5, 10.5, 1));  ax.set_xticklabels(range(10))
-    ax.set_yticks(np.arange(0.5, 10.5, 1));  ax.set_yticklabels(reversed(range(10)))
-    ax.xaxis.tick_top()
-
-    ims = []
-    for step_idx, (node, visited) in enumerate(path):
-        x = node[1] + 0.5
-        y = (9 - node[0]) + 0.5
-        circle, = ax.plot(x, y, marker='o', color='#0000FF', markersize=18, animated=True)
-        title   = ax.text(
-            0.5, 1.05,
-            f"Step {step_idx+1} | Visited: {bin(visited).count('1')}/10",
-            transform=ax.transAxes, ha="center",
-            fontsize=14, fontweight='bold', animated=True
-        )
-        ims.append([circle, title])
-
-    ani = animation.ArtistAnimation(fig, ims, interval=500, blit=True)
-    ani.save(gif_path, writer='pillow')
-    plt.close()
-
-
 class RLInference:
     MOVES = {0: (-1, 0), 1: (1, 0), 2: (0, -1), 3: (0, 1)}
 
@@ -99,7 +66,40 @@ class RLInference:
                 rewards -= 1
             path.append((current_node, visited))
         if animate:
-            animate_agent(env_map, path, gif_path)  # ← module-level function, no GC risk
+            animate_agent(env_map, path, gif_path)
         elapsed = time.perf_counter() - t0
         print(f"[RL] {steps} steps | reward: {rewards} | elapsed: {elapsed:.4f}s")
         return [p[0] for p in path], rewards, elapsed
+    
+
+def animate_agent(env_map, path, gif_path):
+    cmap = ListedColormap(['#808080', '#FFD700', "#FF9100", '#FF0000', '#00FF00'])
+    fig, ax = plt.subplots(figsize=(6, 6))
+
+    vis_grid = np.copy(env_map.grid)
+    for r, c in env_map.spawners:
+        vis_grid[r, c] = 2
+    vis_grid[env_map.entry_node] = 3
+    vis_grid[env_map.exit_node]  = 4
+
+    ax.pcolor(vis_grid[::-1], cmap=cmap, edgecolors='black', linewidths=2)
+    ax.set_xticks(np.arange(0.5, 10.5, 1));  ax.set_xticklabels(range(10))
+    ax.set_yticks(np.arange(0.5, 10.5, 1));  ax.set_yticklabels(reversed(range(10)))
+    ax.xaxis.tick_top()
+
+    ims = []
+    for step_idx, (node, visited) in enumerate(path):
+        x = node[1] + 0.5
+        y = (9 - node[0]) + 0.5
+        circle, = ax.plot(x, y, marker='o', color='#0000FF', markersize=18, animated=True)
+        title   = ax.text(
+            0.5, 1.05,
+            f"Step {step_idx+1} | Visited: {bin(visited).count('1')}/10",
+            transform=ax.transAxes, ha="center",
+            fontsize=14, fontweight='bold', animated=True
+        )
+        ims.append([circle, title])
+
+    ani = animation.ArtistAnimation(fig, ims, interval=500, blit=True)
+    ani.save(gif_path, writer='pillow')
+    plt.close()

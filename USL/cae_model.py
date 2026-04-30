@@ -8,7 +8,7 @@ import torch
 import numpy as np
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader, random_split
-from USL_training.usl_utils import ReproducibilityManager, seed_worker
+from USL.usl_utils import ReproducibilityManager, seed_worker
 
 
 # MODEL ARCHITECTURE

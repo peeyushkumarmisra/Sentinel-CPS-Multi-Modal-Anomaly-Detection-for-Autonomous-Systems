@@ -12,9 +12,9 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from torch.utils.data import TensorDataset, DataLoader
 
-from USL_training.cae_model import CAEmodel
-from USL_training.cv_features import CVFeatureExtractor
-from USL_training.usl_utils import scan_images, ReproducibilityManager
+from USL.cae_model import CAEmodel
+from USL.cv_features import CVFeatureExtractor
+from USL.usl_utils import scan_images, ReproducibilityManager
 
 
 class FeaturePipeline:

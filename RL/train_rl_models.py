@@ -2,10 +2,10 @@
 
 import os
 import time
-from RL_env.env_scoring import EnvMap
-from RL_env.env_gen import MapGenerator
-from RL_training.rl_models import QLearning, SARSA
-from RL_training.rl_utils import visulazie_comparison, visualize_training
+from Env.env_scoring import EnvMap
+from Env.env_gen import MapGenerator
+from RL.rl_models import QLearning, SARSA
+from RL.rl_utils import visulazie_comparison, visualize_training
 
 class RLTraining:
     def __init__(self,episodes, seed, plot_dir, model_dir):

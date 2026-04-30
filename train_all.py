@@ -6,10 +6,10 @@ and Reinforcement Learning (RL) sequentially.
 """
 
 from pathlib import Path
-from mapping import map_csv, map_imgs
-from SL_training.train_sl_models import SLTraining
-from USL_training.train_usl_models import USLTraining
-from RL_training.train_rl_models import RLTraining
+from Env.mapping import map_csv, map_imgs
+from SL.train_sl_models import SLTraining
+from USL.train_usl_models import USLTraining
+from RL.train_rl_models import RLTraining
 
 
 if __name__ == "__main__":

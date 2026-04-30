@@ -8,11 +8,11 @@ from pathlib import Path
 from itertools import product
 from collections import Counter
 
-from RL_env.spanwer import DataSpawner
-from RL_env.env_gen import MapGenerator
-from SL_training.sl_inference import SLInference
-from USL_training.usl_inference import USLInference
-from RL_training.rl_inference import RLInference
+from Env.spanwer import DataSpawner
+from Env.env_gen import MapGenerator
+from SL.sl_inference import SLInference
+from USL.usl_inference import USLInference
+from RL.rl_inference import RLInference
 
 SL_MODELS  = ["rf_model.pkl",    "svm_model.pkl"]
 USL_MODELS = [("gmm", "gmm_model.pkl"), ("dec", "dec_model.pt")]

@@ -5,11 +5,11 @@ import os
 import time
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
-from USL_training.cae_model import CAETrainer
-from USL_training.feature_pipeline import FeaturePipeline
-from USL_training.gmm import GMMTrainer
-from USL_training.dec import DECTrainer
-from USL_training.usl_utils import map_clusters_to_truth, scan_images, plot_loss_curve, evaluate_and_plot_usl, ReproducibilityManager
+from USL.cae_model import CAETrainer
+from USL.feature_pipeline import FeaturePipeline
+from USL.gmm import GMMTrainer
+from USL.dec import DECTrainer
+from USL.usl_utils import map_clusters_to_truth, scan_images, plot_loss_curve, evaluate_and_plot_usl, ReproducibilityManager
 
 
 

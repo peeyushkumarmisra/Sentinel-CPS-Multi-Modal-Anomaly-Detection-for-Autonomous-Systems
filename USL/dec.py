@@ -10,7 +10,7 @@ import torch.nn.functional as F
 from sklearn.cluster import Birch
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader, TensorDataset
-from USL_training.usl_utils import ReproducibilityManager, seed_worker
+from USL.usl_utils import ReproducibilityManager, seed_worker
 
 
 # MODEL ARCHITECTURE

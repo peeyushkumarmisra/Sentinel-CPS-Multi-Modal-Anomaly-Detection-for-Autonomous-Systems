@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 
 class MapGenerator:
-    def __init__(self, seed=47): 
+    def __init__(self, seed): 
         random.seed(seed)
         np.random.seed(seed)
         self.grid_size = 10

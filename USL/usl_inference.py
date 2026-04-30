@@ -8,9 +8,9 @@ import numpy as np
 from dataclasses import dataclass
 from typing import Literal
 
-from USL_training.feature_pipeline import FeaturePipeline
-from USL_training.gmm import GMMTrainer
-from USL_training.dec import DECTrainer
+from USL.feature_pipeline import FeaturePipeline
+from USL.gmm import GMMTrainer
+from USL.dec import DECTrainer
 
 
 @dataclass

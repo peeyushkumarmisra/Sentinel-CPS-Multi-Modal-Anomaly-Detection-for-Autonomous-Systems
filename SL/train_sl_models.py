@@ -2,8 +2,8 @@
 
 import os
 import time
-from SL_training.sl_models import DataProcessor, RFModel, SVMModel
-from SL_training.sl_utils import evaluate_plot_models
+from SL.sl_models import DataProcessor, RFModel, SVMModel
+from SL.sl_utils import evaluate_plot_models
 
 class SLTraining:
     def __init__(self, seed, data_path, plot_dir, model_dir):
