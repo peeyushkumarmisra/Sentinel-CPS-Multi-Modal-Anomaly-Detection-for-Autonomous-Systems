@@ -6,17 +6,14 @@ __pycache__/
 # Jupyter and VS Code
 .vscode/
 *.ipynb_checkpoints/
-
-# Hide the Translation Architecture (The Facade)
 mapping.py
 
-# Data
-data/
-
 # Model Weights
-models/*.pkl
+*.pkl
 *.pt
+*.json
+*.npy
 
-# Plots and Outputs
+
+# Images
 *.png
-*.csv
