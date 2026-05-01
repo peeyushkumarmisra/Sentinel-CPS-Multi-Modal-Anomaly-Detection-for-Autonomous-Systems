@@ -30,6 +30,7 @@ class RLInference:
                 parsed[state] = v
             except:
                 continue
+        print(f"Parsed: {len(parsed)} states | Skipped: {failed} keys")
         return parsed
 
     def run(self, env_map, animate, gif_path):

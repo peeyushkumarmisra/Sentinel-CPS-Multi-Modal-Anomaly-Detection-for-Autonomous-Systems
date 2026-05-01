@@ -1,9 +1,9 @@
 SL_Model,USL_Model,RL_Model,Points_Level_Cleared,Total_Rewards_Collected,Time_Taken_RL,Total_Time
-rf_model.pkl,gmm_model.pkl,q_brain.json,20,-372,10.0285,12.1836
-rf_model.pkl,gmm_model.pkl,sarsa_brain.json,20,-372,9.5719,11.4684
-rf_model.pkl,dec_model.pt,q_brain.json,24,-372,9.5714,11.4972
-rf_model.pkl,dec_model.pt,sarsa_brain.json,24,-372,9.644,11.5203
-svm_model.pkl,gmm_model.pkl,q_brain.json,19,-372,9.6676,11.7135
-svm_model.pkl,gmm_model.pkl,sarsa_brain.json,19,-372,9.7747,11.8422
-svm_model.pkl,dec_model.pt,q_brain.json,23,-372,9.3475,11.4158
-svm_model.pkl,dec_model.pt,sarsa_brain.json,23,-372,9.3029,11.3464
+rf_model.pkl,gmm_model.pkl,q_brain.json,20,975,1.6353,3.7556
+rf_model.pkl,gmm_model.pkl,sarsa_brain.json,20,465,1.1123,3.0043
+rf_model.pkl,dec_model.pt,q_brain.json,24,975,1.6142,3.531
+rf_model.pkl,dec_model.pt,sarsa_brain.json,24,465,1.059,2.9175
+svm_model.pkl,gmm_model.pkl,q_brain.json,19,975,1.6746,3.7369
+svm_model.pkl,gmm_model.pkl,sarsa_brain.json,19,465,1.0412,3.0997
+svm_model.pkl,dec_model.pt,q_brain.json,23,975,1.5622,3.6033
+svm_model.pkl,dec_model.pt,sarsa_brain.json,23,465,1.054,3.1081
